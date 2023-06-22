@@ -10,11 +10,23 @@ import {
   MDBCollapse,
   MDBNavbarBrand,
 } from "mdb-react-ui-kit";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setLogout } from "../redux/features/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [show, setShow] = useState(false);
+  const [search, setSearch] = useState("");
   const { user } = useSelector((state) => ({ ...state.auth }));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const token = user?.token;
+
+  const handleLogout = () => {
+    dispatch(setLogout());
+  };
+
+  const handleSubmit = () => {};
 
   return (
     <MDBNavbar fixed="top" expand="lg" style={{ backgroundColor: "#f0e6ea" }}>
@@ -63,7 +75,9 @@ const Header = () => {
             {user?.result?._id ? (
               <MDBNavbarItem>
                 <MDBNavbarLink href="/login">
-                  <p className="header-text">Logout</p>
+                  <p className="header-text" onClick={() => handleLogout()}>
+                    Logout
+                  </p>
                 </MDBNavbarLink>
               </MDBNavbarItem>
             ) : (
@@ -74,6 +88,18 @@ const Header = () => {
               </MDBNavbarItem>
             )}
           </MDBNavbarNav>
+          <form className="d-flex input-group w-auto" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search Tour"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <div style={{ marginTop: "5px", marginLeft: "5px" }}>
+              <MDBIcon fas icon="search" />
+            </div>
+          </form>
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>

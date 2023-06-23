@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getToursByUser } from "../redux/features/tourSlice";
+import Spinner from "../components/Spinner";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -34,6 +35,10 @@ const Dashboard = () => {
     }
     return str;
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div
@@ -91,7 +96,7 @@ const Dashboard = () => {
                           icon="trash"
                           style={{ color: "#dd4b39" }}
                           size="lg"
-                        //   onClick={() => handleDelete(item._id)}
+                          //   onClick={() => handleDelete(item._id)}
                         />
                       </MDBBtn>
                       <Link to={`/editTour/${item._id}`}>

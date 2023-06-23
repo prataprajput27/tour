@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBCard,
   MDBCardBody,
+  MDBInput,
+  MDBCardFooter,
   MDBValidation,
   MDBBtn,
-  MDBInput,
+  MDBIcon,
+  MDBSpinner,
 } from "mdb-react-ui-kit";
 import ChipInput from "material-ui-chip-input";
 import FileBase from "react-file-base64";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createTour, updateTour } from "../redux/features/tourSlice";
 
 const initialState = {
   title: "",
@@ -19,11 +24,25 @@ const initialState = {
 
 const AddEditTour = () => {
   const [tourData, setTourData] = useState(initialState);
+  const { error, loading } = useSelector((state) => ({ ...state.tour }));
+  const { user } = useSelector((state) => ({ ...state.auth }));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { title, description, tags } = tourData;
 
+  useEffect(() => {
+    error && toast.error(error);
+  }, [error]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (title && description && tags) {
+      const updatedTourData = { ...tourData, name: user?.result?.name };
+      console.log(user);
+      dispatch(createTour({ updatedTourData, toast, navigate }));
+      handleClear();
+    }
   };
   const onInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,10 +77,10 @@ const AddEditTour = () => {
         <MDBCardBody>
           <MDBValidation onSubmit={handleSubmit} className="row g-3" noValidate>
             <div className="col-md-12">
-              <input
-                placeholder="Enter Title"
+              <MDBInput
+                label="Enter Title"
                 type="text"
-                value={title || ""}
+                value={title}
                 name="title"
                 onChange={onInputChange}
                 className="form-control"
@@ -70,9 +89,10 @@ const AddEditTour = () => {
                 validation="Please provide title"
               />
             </div>
+
             <div className="col-md-12">
-              <input
-                placeholder="Enter Description"
+              <MDBInput
+                label="Enter Description"
                 type="text"
                 value={description}
                 name="description"
@@ -94,6 +114,15 @@ const AddEditTour = () => {
                 value={tags}
                 onAdd={(tag) => handleAddTag(tag)}
                 onDelete={(tag) => handleDeleteTag(tag)}
+              />
+            </div>
+            <div className="d-flex justify-content-start">
+              <FileBase
+                type="file"
+                multiple={false}
+                onDone={({ base64 }) =>
+                  setTourData({ ...tourData, imageFile: base64 })
+                }
               />
             </div>
             <div className="col-12">

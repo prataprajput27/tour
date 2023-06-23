@@ -9,6 +9,14 @@ export const createTour = async (req, res) => {
 
   try {
     await newTour.save();
+    // await TourModal.create({
+    //   title: newTour.title,
+    //   description: newTour.description,
+    //   name: newTour.name,
+    //   creator: newTour.creator,
+    //   // tags: newTour.tags,
+    //   imageFile: newTour.imageFile,
+    // });
     res.status(201).json(newTour);
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });

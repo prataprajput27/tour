@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import userRouter from "./routes/user.js";
-import tourRouter from "./routes/user.js";
+import tourRouter from "./routes/tour.js";
 
 const app = express();
 

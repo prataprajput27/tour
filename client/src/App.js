@@ -50,7 +50,7 @@ function App() {
             path="/dashboard"
             element={
               <PrivateRoute>
-                <AddEditTour />
+                <Dashboard />
               </PrivateRoute>
             }
           />

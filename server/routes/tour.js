@@ -8,11 +8,13 @@ import {
   getTour,
   getTours,
   getToursBySearch,
+  getToursByTag,
   getToursByUser,
   updateTour,
 } from "../controllers/tour.js";
 
 router.get("/search", getToursBySearch);
+router.get("/tag/:tag", getToursByTag);
 router.get("/", getTours);
 router.get("/:id", getTour);
 

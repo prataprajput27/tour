@@ -12,6 +12,7 @@ import {
 } from "mdb-react-ui-kit";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogout } from "../redux/features/authSlice";
+import { searchTours } from "../redux/features/tourSlice";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -22,11 +23,20 @@ const Header = () => {
   const navigate = useNavigate();
   const token = user?.token;
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (search) {
+      dispatch(searchTours(search));
+      navigate(`/tours/search?searchQuery=${search}`);
+      setSearch("");
+    } else {
+      navigate("/");
+    }
+  };
+
   const handleLogout = () => {
     dispatch(setLogout());
   };
-
-  const handleSubmit = () => {};
 
   return (
     <MDBNavbar fixed="top" expand="lg" style={{ backgroundColor: "#f0e6ea" }}>

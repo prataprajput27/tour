@@ -3,11 +3,8 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBCardFooter,
   MDBValidation,
   MDBBtn,
-  MDBIcon,
-  MDBSpinner,
 } from "mdb-react-ui-kit";
 import ChipInput from "material-ui-chip-input";
 import FileBase from "react-file-base64";
@@ -24,7 +21,9 @@ const initialState = {
 
 const AddEditTour = () => {
   const [tourData, setTourData] = useState(initialState);
-  const { error, loading, userTours } = useSelector((state) => ({
+  const [tagErrMsg, setTagErrMsg] = useState(null);
+
+  const { error, userTours } = useSelector((state) => ({
     ...state.tour,
   }));
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -39,6 +38,7 @@ const AddEditTour = () => {
       const singleTour = userTours.find((tour) => tour._id === id);
       setTourData({ ...singleTour });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -47,6 +47,11 @@ const AddEditTour = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!tags.length) {
+      setTagErrMsg("Please provide some tags");
+    }
+
     if (title && description && tags) {
       const updatedTourData = { ...tourData, name: user?.result?.name };
 
@@ -63,6 +68,7 @@ const AddEditTour = () => {
     setTourData({ ...tourData, [name]: value });
   };
   const handleAddTag = (tag) => {
+    setTagErrMsg(null);
     setTourData({ ...tourData, tags: [...tourData.tags, tag] });
   };
   const handleDeleteTag = (deleteTag) => {
@@ -94,7 +100,7 @@ const AddEditTour = () => {
               <MDBInput
                 label="Enter Title"
                 type="text"
-                value={title}
+                value={title || ""}
                 name="title"
                 onChange={onInputChange}
                 className="form-control"
@@ -129,6 +135,7 @@ const AddEditTour = () => {
                 onAdd={(tag) => handleAddTag(tag)}
                 onDelete={(tag) => handleDeleteTag(tag)}
               />
+              {tagErrMsg && <div className="tagErrMsg">{tagErrMsg}</div>}
             </div>
             <div className="d-flex justify-content-start">
               <FileBase

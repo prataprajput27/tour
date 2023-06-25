@@ -114,3 +114,13 @@ export const getToursByTag = async (req, res) => {
     res.status(404).json({ message: "Something went wrong" });
   }
 };
+
+export const getRelatedTours = async (req, res) => {
+  const tags = req.body;
+  try {
+    const tours = await TourModal.find({ tags: { $in: tags } });
+    res.json(tours);
+  } catch (error) {
+    res.status(404).json({ message: "Something went wrong" });
+  }
+};

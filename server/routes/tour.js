@@ -5,6 +5,7 @@ import auth from "../middleware/auth.js";
 import {
   createTour,
   deleteTour,
+  getRelatedTours,
   getTour,
   getTours,
   getToursBySearch,
@@ -15,6 +16,7 @@ import {
 
 router.get("/search", getToursBySearch);
 router.get("/tag/:tag", getToursByTag);
+router.post("/relatedTours", getRelatedTours);
 router.get("/", getTours);
 router.get("/:id", getTour);
 

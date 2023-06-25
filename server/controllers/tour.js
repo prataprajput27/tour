@@ -136,3 +136,34 @@ export const getRelatedTours = async (req, res) => {
     res.status(404).json({ message: "Something went wrong" });
   }
 };
+
+export const likeTour = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!req.userId) {
+      return res.json({ message: "User is not authenticated" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: `No tour exist with id: ${id}` });
+    }
+
+    const tour = await TourModal.findById(id);
+
+    const index = tour.likes.findIndex((id) => id === String(req.userId));
+
+    if (index === -1) {
+      tour.likes.push(req.userId);
+    } else {
+      tour.likes = tour.likes.filter((id) => id !== String(req.userId));
+    }
+
+    const updatedTour = await TourModal.findByIdAndUpdate(id, tour, {
+      new: true,
+    });
+
+    res.status(200).json(updatedTour);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};

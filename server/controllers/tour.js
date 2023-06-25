@@ -34,12 +34,12 @@ export const getTours = async (req, res) => {
   try {
     // const tours = await TourModal.find();
     // res.status(200).json(tours);
-
+    console.log("Hey");
     const limit = 6;
     const startIndex = (Number(page) - 1) * limit;
     const total = await TourModal.countDocuments({});
     const tours = await TourModal.find().limit(limit).skip(startIndex);
-    res.json({
+    return res.json({
       data: tours,
       currentPage: Number(page),
       totalTours: total,
